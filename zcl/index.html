@@ -125,12 +125,17 @@
 
 	<!-- 初始化新的 JS 调用广告 -->
 	<script>
-		window.addEventListener('load', () => {
-			RoiifyAds.show('plc_pnr88wn1efpq', '[data-roiify-placement-new]', {
-				theme: 'dark',
-				format: 'banner',
-			});
-		});
+		// 由于 SDK 是异步加载的 (async)，它可能会在页面加载完毕后才生效。
+		// 这里使用轮询机制，一旦 SDK 准备就绪，立刻触发顶部广告的展示
+		let checkRoiify = setInterval(() => {
+			if (typeof RoiifyAds !== 'undefined' && RoiifyAds.show) {
+				clearInterval(checkRoiify);
+				RoiifyAds.show('plc_pnr88wn1efpq', '[data-roiify-placement-new]', {
+					theme: 'dark',
+					format: 'banner',
+				});
+			}
+		}, 100);
 	</script>
 </body>
 
